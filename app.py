@@ -19,6 +19,12 @@ app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', secrets.token_he
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
 
+# Configurações de sessão
+app.config['SESSION_COOKIE_SECURE'] = False  # True em produção com HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
+
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -102,25 +108,36 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
+        print(f"Tentativa de login para usuário: {username}")  # Debug
+        
         user = User.query.filter_by(username=username).first()
         
-        if user and user.is_locked():
+        if not user:
+            print(f"Usuário não encontrado: {username}")  # Debug
+            log_security_event('login_failed', request.remote_addr, request.user_agent.string, False)
+            flash('Usuário ou senha incorretos.', 'error')
+            return render_template('login.html')
+        
+        if user.is_locked():
+            print(f"Usuário bloqueado: {username}")  # Debug
             flash('Conta temporariamente bloqueada. Tente novamente em 15 minutos.', 'error')
             log_security_event('login_attempt', request.remote_addr, request.user_agent.string, False)
             return render_template('login.html')
         
-        if user and user.check_password(password):
-            login_user(user)
+        if user.check_password(password):
+            print(f"Senha correta para usuário: {username}")  # Debug
+            login_user(user, remember=True)
             user.last_login = datetime.utcnow()
             user.reset_failed_attempts()
             db.session.commit()
             
+            print(f"Login bem-sucedido para usuário: {username}")  # Debug
             log_security_event('login_success', request.remote_addr, request.user_agent.string, True, user.id)
             flash('Login realizado com sucesso!', 'success')
             return redirect(url_for('dashboard'))
         else:
-            if user:
-                user.increment_failed_attempts()
+            print(f"Senha incorreta para usuário: {username}")  # Debug
+            user.increment_failed_attempts()
             log_security_event('login_failed', request.remote_addr, request.user_agent.string, False)
             flash('Usuário ou senha incorretos.', 'error')
     
