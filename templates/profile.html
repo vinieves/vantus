@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil - Vantus{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-user text-primary me-2"></i>Meu Perfil</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-user-circle text-primary" style="font-size: 5rem;"></i>
+                            </div>
+                            <h5>{{ current_user.username }}</h5>
+                            <p class="text-muted">{{ current_user.email }}</p>
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Conta Ativa
+                            </span>
+                        </div>
+                        <div class="col-md-8">
+                            <h6><i class="fas fa-info-circle text-info me-2"></i>Informações da Conta</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Nome de Usuário:</strong><br>{{ current_user.username }}</p>
+                                    <p><strong>Email:</strong><br>{{ current_user.email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Data de Criação:</strong><br>{{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+                                    <p><strong>Último Login:</strong><br>
+                                        {% if current_user.last_login %}
+                                            {{ current_user.last_login.strftime('%d/%m/%Y %H:%M') }}
+                                        {% else %}
+                                            Primeiro acesso
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h6><i class="fas fa-shield-alt text-warning me-2"></i>Segurança</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Status da Conta:</strong><br>
+                                        {% if current_user.is_active %}
+                                            <span class="text-success"><i class="fas fa-check-circle me-1"></i>Ativa</span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="fas fa-times-circle me-1"></i>Inativa</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Tentativas Falhadas:</strong><br>{{ current_user.failed_login_attempts }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a href="{{ url_for('change_password') }}" class="btn btn-warning">
+                                    <i class="fas fa-key me-2"></i>Alterar Senha
+                                </a>
+                                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>Voltar ao Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

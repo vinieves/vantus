@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Vantus - Sistema de Login Seguro{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1><i class="fas fa-shield-alt me-3"></i>Vantus</h1>
+        <p class="lead">Sistema de autenticação seguro e moderno</p>
+        <div class="d-flex justify-content-center gap-3">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('login') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Cadastrar
+                </a>
+            {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h4>Segurança Máxima</h4>
+                <p>Criptografia bcrypt, proteção contra ataques de força bruta e logs de segurança detalhados.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h4>Responsivo</h4>
+                <p>Interface moderna e responsiva que funciona perfeitamente em todos os dispositivos.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h4>Alta Performance</h4>
+                <p>Desenvolvido com Flask para máxima eficiência e escalabilidade em VPS Ubuntu.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3><i class="fas fa-shield-check text-success me-2"></i>Recursos de Segurança</h3>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check text-success me-2"></i>Criptografia bcrypt</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Proteção contra força bruta</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Bloqueio temporário de contas</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Logs de segurança</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check text-success me-2"></i>Validação de senhas</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Proteção CSRF</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Headers de segurança</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Monitoramento de IP</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

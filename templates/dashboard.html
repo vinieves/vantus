@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Vantus{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2><i class="fas fa-tachometer-alt text-primary me-2"></i>Dashboard</h2>
+                        <span class="badge bg-success">
+                            <i class="fas fa-shield-check me-1"></i>Conectado
+                        </span>
+                    </div>
+                    <p class="text-muted">Bem-vindo de volta, {{ current_user.username }}!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-circle text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">Perfil</h5>
+                    <p class="text-muted">{{ current_user.username }}</p>
+                    <p class="text-muted">{{ current_user.email }}</p>
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i>Editar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock text-warning" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">Último Login</h5>
+                    {% if current_user.last_login %}
+                        <p class="text-muted">{{ current_user.last_login.strftime('%d/%m/%Y %H:%M') }}</p>
+                    {% else %}
+                        <p class="text-muted">Primeiro acesso</p>
+                    {% endif %}
+                    <small class="text-muted">Conta criada em {{ current_user.created_at.strftime('%d/%m/%Y') }}</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-shield-alt text-success" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">Status da Conta</h5>
+                    {% if current_user.is_active %}
+                        <p class="text-success"><i class="fas fa-check-circle me-1"></i>Ativa</p>
+                    {% else %}
+                        <p class="text-danger"><i class="fas fa-times-circle me-1"></i>Inativa</p>
+                    {% endif %}
+                    <a href="{{ url_for('change_password') }}" class="btn btn-outline-warning">
+                        <i class="fas fa-key me-1"></i>Alterar Senha
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line text-primary me-2"></i>Atividade Recente</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-sign-in-alt text-success me-2"></i>Logins Bem-sucedidos</h6>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: 95%">95%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Tentativas Falhadas</h6>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-warning" style="width: 5%">5%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6><i class="fas fa-info-circle text-info me-2"></i>Dicas de Segurança</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Use senhas fortes</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Ative autenticação de dois fatores</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Mantenha seu sistema atualizado</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Não compartilhe suas credenciais</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Faça logout em dispositivos públicos</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Monitore atividades suspeitas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-cogs text-primary me-2"></i>Ações Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('profile') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user me-2"></i>Perfil
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('change_password') }}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-key me-2"></i>Alterar Senha
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <button class="btn btn-outline-info w-100" onclick="showSecurityInfo()">
+                                <i class="fas fa-shield-alt me-2"></i>Segurança
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showSecurityInfo() {
+    alert('Sistema de Segurança Vantus:\n\n' +
+          '✅ Criptografia bcrypt\n' +
+          '✅ Proteção contra força bruta\n' +
+          '✅ Bloqueio temporário de contas\n' +
+          '✅ Logs de segurança detalhados\n' +
+          '✅ Validação de senhas fortes\n' +
+          '✅ Monitoramento de IP\n' +
+          '✅ Headers de segurança');
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+    });
+}, 5000);
+</script>
+{% endblock %} 
